@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 
 // Url WebService
-const String request = 'https://hudson-project-esig.herokuapp.com/cliente';
+const String request = 'https://hudson-to-do-list.herokuapp.com/item';
 
 // Headers
 const Map<String, String> headers = {
@@ -35,6 +35,8 @@ class _HomeState extends State<Home> {
 
   var _selection;
 
+  int counter;
+
   TextEditingController _tarefaController = new TextEditingController();
 
   /*
@@ -44,6 +46,7 @@ class _HomeState extends State<Home> {
     http.Response response = await http.get(request);
     setState(() {
       this._toDoList = json.decode(response.body);
+      this.counter = this._toDoList.length;
     });
   }
 
@@ -53,6 +56,7 @@ class _HomeState extends State<Home> {
   Future<Null> _getRequestDataN() async {
     http.Response response = await http.get(request);
     this._toDoList = json.decode(response.body);
+    this.counter = this._toDoList.length;
   }
 
   /*
@@ -109,7 +113,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void listAll(){
+  void listAll() {
     this._getRequestData();
   }
 
@@ -132,9 +136,9 @@ class _HomeState extends State<Home> {
   /*
   *   DeleteALL
   * */
-  void deleteAll(){
-    for(var a in this._toDoList){
-      if(a['status'] == true){
+  void deleteAll() {
+    for (var a in this._toDoList) {
+      if (a['status'] == true) {
         this._deleteRequestData(a['id']);
       }
     }
@@ -163,7 +167,7 @@ class _HomeState extends State<Home> {
           Icons.delete_forever,
         ),
         backgroundColor: Colors.deepOrange,
-        onPressed: (){
+        onPressed: () {
           deleteAll();
         },
       ),
@@ -176,11 +180,11 @@ class _HomeState extends State<Home> {
               setState(() {
                 _selection = result;
                 print(_selection);
-                if(result == WhyFarther.Completed){
+                if (result == WhyFarther.Completed) {
                   this.listByCompleted();
-                }else if (result == WhyFarther.Actives){
+                } else if (result == WhyFarther.Actives) {
                   this.listByActives();
-                }else{
+                } else {
                   this.listAll();
                 }
               });
@@ -236,6 +240,14 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 10, top: 10),
+            child: Center(
+              child: Text(
+                  'Itens na Lista ${this.counter}'
+              ),
             ),
           ),
           Expanded(
